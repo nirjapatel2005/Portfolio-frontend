@@ -1,11 +1,27 @@
 import { useNavigate } from 'react-router-dom';
+import { useFetch } from '../hooks/useFetch';
+import apiService from '../services/api';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { data: homeData } = useFetch(() => apiService.getHome(), {
+    enableRealtime: true,
+    modelName: 'home',
+  });
   
   const handleContactClick = () => {
-    navigate('/contact');
+    const link = homeData?.contactLink || '/contact';
+    navigate(link);
   };
+
+  const greeting = homeData?.greeting || "Hi,";
+  const name = homeData?.name || "Nirja Patel";
+  const role = homeData?.role || "Full Stack Developer";
+  const subtitle = homeData?.subtitle || "";
+  const contactLabel = homeData?.contactLabel || "Contact Me";
+  const linkedinUrl = homeData?.linkedinUrl || "https://linkedin.com";
+  const githubUrl = homeData?.githubUrl || "https://github.com";
+  const profileImage = homeData?.profileImage || "";
 
   return (
     <div className="min-h-screen bg-white pb-20">
@@ -15,27 +31,30 @@ const Home = () => {
           <div className="space-y-6">
             <div className="space-y-2">
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Hi,
+                {greeting}
               </h1>
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                I'am <span className="text-blue-600">Nirja Patel</span>
+                I&apos;am <span className="text-blue-600">{name}</span>
               </h1>
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mt-2">
-                 Full Stack Developer
+                 {role}
               </h2>
+              {subtitle && (
+                <p className="text-lg text-gray-600 mt-2">{subtitle}</p>
+              )}
             </div>
             <div className="space-y-4">
               <button
                 onClick={handleContactClick}
                 className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium text-lg hover:bg-blue-700 transition-colors mt-6"
               >
-                Contact Me
+                {contactLabel}
               </button>
               
               {/* Social Icons */}
               <div className="flex items-center space-x-4 mt-4">
                 <a 
-                  href="https://linkedin.com" 
+                  href={linkedinUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-900 hover:text-blue-600 transition-colors font-semibold text-lg"
@@ -44,7 +63,7 @@ const Home = () => {
                   in
                 </a>
                 <a 
-                  href="https://github.com" 
+                  href={githubUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-900 hover:text-blue-600 transition-colors"
@@ -88,10 +107,13 @@ const Home = () => {
               {/* Profile Image Container */}
               <div className="relative">
                 <div className="w-64 h-64 lg:w-80 lg:h-80 mx-auto rounded-full bg-gray-200 overflow-hidden border-4 border-white shadow-2xl relative z-20">
-                  {/* Placeholder for profile image - replace with actual image */}
-                  <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                    <span className="text-6xl lg:text-8xl text-gray-600">👤</span>
-                  </div>
+                  {profileImage ? (
+                    <img src={profileImage} alt={name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                      <span className="text-6xl lg:text-8xl text-gray-600">👤</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -103,7 +103,8 @@ const App = () => {
         <ScrollNavigation />
         <div className="min-h-screen bg-gray-50 flex flex-col">
           <Navigation />
-          <main className="flex-grow">
+        <main className="flex-grow">
+          <div className="page-transition">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -116,7 +117,8 @@ const App = () => {
               <Route path="/media" element={<Media />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
-          </main>
+          </div>
+        </main>
           <Footer />
         </div>
       </BrowserRouter>

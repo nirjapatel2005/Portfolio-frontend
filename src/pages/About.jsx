@@ -14,59 +14,140 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
-        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-12">About Me</h1>
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-20 lg:py-32">
+        <div className="absolute inset-0">
+          <div 
+            className="absolute bg-blue-600 opacity-20"
+            style={{
+              width: '500px',
+              height: '500px',
+              borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%',
+              transform: 'translate(-20%, -10%)',
+              filter: 'blur(80px)',
+            }}
+          ></div>
+          <div 
+            className="absolute bg-blue-500 opacity-15"
+            style={{
+              width: '400px',
+              height: '400px',
+              borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+              transform: 'translate(80%, 20%)',
+              filter: 'blur(70px)',
+            }}
+          ></div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              About <span className="text-blue-600">Me</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Passionate about creating exceptional digital experiences
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
         {about && Object.keys(about).length > 0 ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 lg:p-12 mb-8">
-            {about.title && (
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">{about.title}</h2>
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {about.image && (
-              <div className="mb-6">
-                <img src={about.image} alt={about.title || "About"} className="w-full max-w-md mx-auto rounded-lg" />
+              <div className="relative">
+                <div className="relative z-10">
+                  <img 
+                    src={about.image} 
+                    alt={about.title || "About"} 
+                    className="w-full rounded-2xl shadow-2xl"
+                  />
+                </div>
+                <div 
+                  className="absolute -bottom-6 -right-6 bg-blue-600 opacity-20 -z-10"
+                  style={{
+                    width: '200px',
+                    height: '200px',
+                    borderRadius: '40% 60% 70% 30%',
+                    filter: 'blur(40px)',
+                  }}
+                ></div>
               </div>
             )}
-            <div className="prose prose-lg max-w-none">
-              <p className="text-lg text-gray-700 leading-relaxed mb-4">{about.description || about.content}</p>
+            <div className="space-y-8">
+              {about.title && (
+                <h2 className="text-4xl font-bold text-gray-900">{about.title}</h2>
+              )}
+              <div className="prose prose-lg max-w-none">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  {about.description || about.content}
+                </p>
+              </div>
+              
               {about.skills && about.skills.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Key Skills</h3>
-                  <div className="flex flex-wrap gap-2">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Key Skills</h3>
+                  <div className="flex flex-wrap gap-3">
                     {about.skills.map((skill, index) => (
-                      <span key={index} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-sm font-medium">
+                      <span 
+                        key={index} 
+                        className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 transition-colors"
+                      >
                         {skill}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
+              
               {about.highlights && about.highlights.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Highlights</h3>
-                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Highlights</h3>
+                  <div className="space-y-3">
                     {about.highlights.map((highlight, index) => (
-                      <li key={index}>{highlight}</li>
+                      <div key={index} className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full mt-3 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-700 leading-relaxed">{highlight}</p>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
             </div>
           </div>
-        ) : null}
-        {!about && !loading && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 lg:p-12 mb-8">
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              Welcome to my portfolio! I'm a passionate web designer dedicated to creating beautiful and functional digital experiences.
-            </p>
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              With years of experience in web development and design, I specialize in creating user-friendly interfaces that combine aesthetics with functionality. My approach focuses on understanding user needs and translating them into intuitive digital solutions.
-            </p>
-            <p className="text-lg text-gray-700 leading-relaxed">
-              I'm constantly learning and adapting to new technologies and design trends to deliver the best possible results for my clients.
-            </p>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <h2 className="text-4xl font-bold text-gray-900">Welcome to My Portfolio</h2>
+              <div className="space-y-6">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  I'm a passionate web designer dedicated to creating beautiful and functional digital experiences that make a difference.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  With years of experience in web development and design, I specialize in creating user-friendly interfaces that combine aesthetics with functionality.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  I'm constantly learning and adapting to new technologies and design trends to deliver the best possible results for my clients.
+                </p>
+              </div>
+            </div>
+            <div className="relative flex justify-center">
+              <div className="relative z-10 w-80 h-80 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+                <span className="text-8xl text-blue-600">👨‍💻</span>
+              </div>
+              <div 
+                className="absolute bg-blue-600 opacity-20"
+                style={{
+                  width: '300px',
+                  height: '300px',
+                  borderRadius: '40% 60% 70% 30%',
+                  transform: 'translate(20%, 10%)',
+                  filter: 'blur(60px)',
+                }}
+              ></div>
+            </div>
           </div>
         )}
-        {/* Extra spacing to ensure scrollability */}
         <div className="h-20"></div>
       </div>
     </div>

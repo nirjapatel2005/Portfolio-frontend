@@ -96,6 +96,11 @@ const extractItems = (data) => {
 }
 
 const apiService = {
+  getHome: async () => {
+    const data = await fetchFromCMS('/api/home')
+    return data || {}
+  },
+
   getAbout: async () => {
     const data = await fetchFromCMS('/api/about')
     return data || {}

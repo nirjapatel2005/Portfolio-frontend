@@ -14,39 +14,80 @@ const Projects = () => {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
-        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-12">Projects</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-20 lg:py-32">
+        <div className="absolute inset-0">
+          <div 
+            className="absolute bg-blue-600 opacity-20"
+            style={{
+              width: '500px',
+              height: '500px',
+              borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%',
+              transform: 'translate(-20%, -10%)',
+              filter: 'blur(80px)',
+            }}
+          ></div>
+          <div 
+            className="absolute bg-blue-500 opacity-15"
+            style={{
+              width: '400px',
+              height: '400px',
+              borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+              transform: 'translate(80%, 20%)',
+              filter: 'blur(70px)',
+            }}
+          ></div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              My <span className="text-blue-600">Projects</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Showcasing innovative solutions and creative implementations
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Projects Grid */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects && projects.length > 0 ? (
             projects.map((project) => (
-              <div key={project._id || project.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                {project.coverImage && (
-                  <div className="w-full h-48 bg-gray-200 overflow-hidden">
-                    <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover" />
+              <div key={project._id || project.id} className="group bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                {project.coverImage ? (
+                  <div className="relative w-full h-48 bg-gray-200 overflow-hidden">
+                    <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                  </div>
+                ) : (
+                  <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                    <span className="text-6xl text-blue-600">💻</span>
                   </div>
                 )}
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{project.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{project.title}</h3>
                   <p className="text-gray-700 mb-4 leading-relaxed">{project.shortDescription || project.description}</p>
                   {project.tech && project.tech.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 mb-4">
                       {project.tech.map((tech, index) => (
-                        <span key={index} className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-md font-medium">
+                        <span key={index} className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">
                           {tech}
                         </span>
                       ))}
                     </div>
                   )}
                   {(project.link || project.repo) && (
-                    <div className="mt-4 flex gap-2">
+                    <div className="flex gap-3">
                       {project.link && (
-                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          Live Demo →
+                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                          Live Demo
                         </a>
                       )}
                       {project.repo && (
-                        <a href={project.repo} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-700 text-sm font-medium">
-                          GitHub →
+                        <a href={project.repo} target="_blank" rel="noopener noreferrer" className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                          GitHub
                         </a>
                       )}
                     </div>
@@ -57,14 +98,24 @@ const Projects = () => {
           ) : (
             <>
               {[1, 2, 3, 4, 5, 6].map((index) => (
-                <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                  <div className="w-full h-48 bg-gray-200"></div>
+                <div key={index} className="group bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                  <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                    <span className="text-6xl text-blue-600">💻</span>
+                  </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Project {index}</h3>
-                    <p className="text-gray-700 mb-4 leading-relaxed">Project description goes here.</p>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-md font-medium">React</span>
-                      <span className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-md font-medium">Node.js</span>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">Project {index}</h3>
+                    <p className="text-gray-700 mb-4 leading-relaxed">An innovative project showcasing modern web development techniques and best practices.</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">React</span>
+                      <span className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">Node.js</span>
+                    </div>
+                    <div className="flex gap-3">
+                      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                        Live Demo
+                      </button>
+                      <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                        GitHub
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -72,7 +123,6 @@ const Projects = () => {
             </>
           )}
         </div>
-        {/* Extra spacing to ensure scrollability */}
         <div className="h-20"></div>
       </div>
     </div>

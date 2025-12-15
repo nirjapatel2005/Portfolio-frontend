@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* Smooth scrolling across the app */
+html, body {
+  scroll-behavior: smooth;
+}
+
+/* Page fade/slide animation for gentle ease-in/out */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: fadeInUp 5s ease-in-out;
+}
 html {
   scroll-behavior: smooth;
   overflow-y: scroll;
