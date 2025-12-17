@@ -105,15 +105,38 @@ const Home = () => {
               </div>
               
               {/* Profile Image Container */}
-              <div className="relative">
-                <div className="w-64 h-64 lg:w-80 lg:h-80 mx-auto rounded-full bg-gray-200 overflow-hidden border-4 border-white shadow-2xl relative z-20">
-                  {profileImage ? (
-                    <img src={profileImage} alt={name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                      <span className="text-6xl lg:text-8xl text-gray-600">👤</span>
+              <div className="relative flex justify-center items-center">
+                <div className="relative w-64 h-64 lg:w-80 lg:h-80 rounded-full bg-gray-200 overflow-hidden border-4 border-white shadow-2xl z-20">
+                  {profileImage && profileImage.trim() !== "" ? (
+                    <img 
+                      src={profileImage} 
+                      alt={name} 
+                      className="absolute inset-0 w-full h-full object-cover object-center"
+                      style={{ 
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center'
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        const fallback = e.target.parentElement.querySelector('.fallback-container');
+                        if (fallback) {
+                          fallback.style.display = 'flex';
+                        }
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className={`fallback-container absolute inset-0 w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center ${profileImage && profileImage.trim() !== "" ? 'hidden' : ''}`}
+                    style={{ display: profileImage && profileImage.trim() !== "" ? 'none' : 'flex' }}
+                  >
+                    <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                      <span className="text-4xl lg:text-6xl text-white font-bold">
+                        {name ? name.charAt(0).toUpperCase() : 'P'}
+                      </span>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>

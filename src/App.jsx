@@ -64,7 +64,9 @@ const ScrollNavigation = () => {
         lastScrollTime.current = now;
         const nextRoute = scrollSequence[currentIndex + 1];
         navigate(nextRoute.path);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
         setTimeout(() => {
           scrollCooldown.current = false;
         }, 800);
@@ -75,7 +77,9 @@ const ScrollNavigation = () => {
         lastScrollTime.current = now;
         const prevRoute = scrollSequence[currentIndex - 1];
         navigate(prevRoute.path);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
         setTimeout(() => {
           scrollCooldown.current = false;
         }, 800);
@@ -90,7 +94,9 @@ const ScrollNavigation = () => {
 
   // Reset scroll position when route changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }, [location.pathname]);
 
   return null;
