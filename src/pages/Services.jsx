@@ -15,7 +15,7 @@ const Services = () => {
   return (
     <div className="min-h-screen bg-white pb-20">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-20 lg:py-32">
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-10 lg:py-14">
         <div className="absolute inset-0">
           <div 
             className="absolute bg-blue-600 opacity-20"
@@ -30,10 +30,10 @@ const Services = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
               My <span className="text-blue-600">Services</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               Comprehensive solutions to bring your digital vision to life
             </p>
           </div>

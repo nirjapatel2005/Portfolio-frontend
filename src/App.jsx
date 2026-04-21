@@ -11,93 +11,100 @@ import Services from './pages/Services';
 import Projects from './pages/Projects';
 import Blog from './pages/Blog';
 import Testimonials from './pages/Testimonials';
-import Media from './pages/Media';
 import Contact from './pages/Contact';
 
-// Component to handle scroll-based navigation (optional feature)
-const ScrollNavigation = () => {
+const ScrollToTop = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  return null;
+};
+
+const RouteScrollNavigator = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const scrollCooldown = useRef(false);
-  const lastScrollTime = useRef(0);
-
-  // Define the scroll sequence with routes
-  const scrollSequence = [
-    { path: '/', name: 'Home' },
-    { path: '/about', name: 'About' },
-    { path: '/skills', name: 'Skills' },
-    { path: '/projects', name: 'Projects' }
+  const isCooldown = useRef(false);
+  const wheelAccumulator = useRef(0);
+  const resetTimerRef = useRef(null);
+  const routeSequence = [
+    '/',
+    '/about',
+    '/skills',
+    '/experience',
+    '/services',
+    '/projects',
+    '/blog',
+    '/testimonials',
+    '/contact'
   ];
 
-  // Handle wheel scroll for smooth page transitions
   useEffect(() => {
-    const handleWheel = (e) => {
-      const currentPath = location.pathname;
-      const currentRoute = scrollSequence.find(r => r.path === currentPath);
-      
-      // Only handle scroll for pages in the sequence
-      if (!currentRoute) {
+    const handleWheel = (event) => {
+      const currentIndex = routeSequence.indexOf(location.pathname);
+      if (currentIndex === -1 || isCooldown.current || Math.abs(event.deltaY) < 4) {
         return;
       }
 
-      // Cooldown to prevent rapid page changes
-      const now = Date.now();
-      if (scrollCooldown.current || now - lastScrollTime.current < 600) {
-        return;
-      }
-
+      // Only allow route switch when user is near page edges,
+      // so regular content reading scroll does not jump routes.
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const windowHeight = window.innerHeight;
+      const viewportHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-      const scrollPercentage = (scrollY / (documentHeight - windowHeight)) * 100;
+      const edgeOffset = 90;
+      const nearTop = scrollY <= edgeOffset;
+      const nearBottom = scrollY + viewportHeight >= documentHeight - edgeOffset;
 
-      const deltaY = e.deltaY;
-      const currentIndex = scrollSequence.findIndex(r => r.path === currentPath);
-
-      // Only trigger at top (scroll down) or bottom (scroll up) of page
-      const isNearTop = scrollPercentage <= 5 || scrollY < 100;
-      const isNearBottom = scrollPercentage >= 95 || (documentHeight - windowHeight - scrollY) < 100;
-
-      // Scroll down - go to next page
-      if (deltaY > 30 && (isNearBottom || isNearTop) && currentIndex < scrollSequence.length - 1) {
-        scrollCooldown.current = true;
-        lastScrollTime.current = now;
-        const nextRoute = scrollSequence[currentIndex + 1];
-        navigate(nextRoute.path);
-        requestAnimationFrame(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        setTimeout(() => {
-          scrollCooldown.current = false;
-        }, 800);
+      if (event.deltaY > 0 && !nearBottom) {
+        wheelAccumulator.current = 0;
+        return;
       }
-      // Scroll up - go to previous page
-      else if (deltaY < -30 && (isNearTop || isNearBottom) && currentIndex > 0) {
-        scrollCooldown.current = true;
-        lastScrollTime.current = now;
-        const prevRoute = scrollSequence[currentIndex - 1];
-        navigate(prevRoute.path);
-        requestAnimationFrame(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+
+      if (event.deltaY < 0 && !nearTop) {
+        wheelAccumulator.current = 0;
+        return;
+      }
+
+      // Accumulate wheel intent so navigation feels natural
+      wheelAccumulator.current += event.deltaY;
+
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+      resetTimerRef.current = setTimeout(() => {
+        wheelAccumulator.current = 0;
+      }, 180);
+
+      const threshold = 80;
+      if (wheelAccumulator.current >= threshold && currentIndex < routeSequence.length - 1) {
+        isCooldown.current = true;
+        wheelAccumulator.current = 0;
+        navigate(routeSequence[currentIndex + 1]);
         setTimeout(() => {
-          scrollCooldown.current = false;
-        }, 800);
+          isCooldown.current = false;
+        }, 650);
+      }
+
+      if (wheelAccumulator.current <= -threshold && currentIndex > 0) {
+        isCooldown.current = true;
+        wheelAccumulator.current = 0;
+        navigate(routeSequence[currentIndex - 1]);
+        setTimeout(() => {
+          isCooldown.current = false;
+        }, 650);
       }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
     };
   }, [location.pathname, navigate]);
-
-  // Reset scroll position when route changes
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }, [location.pathname]);
 
   return null;
 };
@@ -106,11 +113,11 @@ const App = () => {
   return (
     <SocketProvider>
       <BrowserRouter>
-        <ScrollNavigation />
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <ScrollToTop />
+        <RouteScrollNavigator />
+        <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
           <Navigation />
-        <main className="flex-grow">
-          <div className="page-transition">
+          <main className="flex-grow pt-20">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -120,11 +127,9 @@ const App = () => {
               <Route path="/projects" element={<Projects />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/testimonials" element={<Testimonials />} />
-              <Route path="/media" element={<Media />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
-          </div>
-        </main>
+          </main>
           <Footer />
         </div>
       </BrowserRouter>

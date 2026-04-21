@@ -3,6 +3,36 @@ import apiService from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 
+const parseDate = (value) => {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const formatMonthYear = (value) => {
+  const parsed = parseDate(value);
+  if (!parsed) return value || '';
+  return parsed.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+};
+
+const getDurationLabel = (startValue, endValue) => {
+  const startDate = parseDate(startValue);
+  const endDate = parseDate(endValue) || new Date();
+  if (!startDate) return '';
+
+  let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+  months += endDate.getMonth() - startDate.getMonth();
+  if (endDate.getDate() < startDate.getDate()) months -= 1;
+  if (months < 0) return '';
+
+  const years = Math.floor(months / 12);
+  const remainingMonths = months % 12;
+  const parts = [];
+  if (years > 0) parts.push(`${years} yr${years > 1 ? 's' : ''}`);
+  if (remainingMonths > 0 || parts.length === 0) parts.push(`${remainingMonths} month${remainingMonths > 1 ? 's' : ''}`);
+  return parts.join(' ');
+};
+
 const Experience = () => {
   const { data: experiences, loading, error } = useFetch(() => apiService.getExperience(), { 
     enableRealtime: true, 
@@ -15,7 +45,7 @@ const Experience = () => {
   return (
     <div className="min-h-screen bg-white pb-20">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-20 lg:py-32">
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-10 lg:py-14">
         <div className="absolute inset-0">
           <div 
             className="absolute bg-blue-600 opacity-20"
@@ -40,10 +70,10 @@ const Experience = () => {
         </div>
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
               My <span className="text-blue-600">Experience</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               A journey of growth, learning, and professional achievements
             </p>
           </div>
@@ -57,7 +87,13 @@ const Experience = () => {
           <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-600 to-blue-300 rounded-full"></div>
           
           {experiences && experiences.length > 0 ? (
-            experiences.map((exp, index) => (
+            experiences.map((exp, index) => {
+              const startValue = exp.startDate || exp.start;
+              const endValue = exp.endDate || exp.end;
+              const duration = getDurationLabel(startValue, endValue);
+              const periodLabel = `${formatMonthYear(startValue)} - ${endValue ? formatMonthYear(endValue) : 'Present'}`;
+
+              return (
               <div key={exp._id || exp.id} className="relative flex items-start mb-12 group">
                 {/* Enhanced Timeline dot */}
                 <div className="absolute left-6 w-6 h-6 bg-blue-600 rounded-full border-4 border-white shadow-lg z-10 group-hover:scale-125 transition-transform duration-300">
@@ -77,8 +113,9 @@ const Experience = () => {
                           {exp.company || exp.organization}
                         </p>
                       </div>
-                      <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium inline-block w-fit">
-                        {exp.startDate || exp.start} - {exp.endDate || exp.end || 'Present'}
+                      <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium inline-flex flex-col leading-tight w-fit">
+                        <span>{periodLabel}</span>
+                        {duration && <span className="text-blue-100 text-xs mt-0.5">{duration}</span>}
                       </span>
                     </div>
                     
@@ -101,7 +138,7 @@ const Experience = () => {
                   </div>
                 </div>
               </div>
-            ))
+            )})
           ) : (
             <div className="ml-20">
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
