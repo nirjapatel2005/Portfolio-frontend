@@ -2,6 +2,10 @@ import { useState } from 'react';
 import apiService from '../services/api';
 
 const Contact = () => {
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL;
+  const contactPhone = import.meta.env.VITE_CONTACT_PHONE;
+  const contactLocation = import.meta.env.VITE_CONTACT_LOCATION;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -92,7 +96,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Email</h3>
-                  <p className="text-gray-600">hello@example.com</p>
+                  <p className="text-gray-600">{contactEmail}</p>
                 </div>
               </div>
               
@@ -102,7 +106,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Phone</h3>
-                  <p className="text-gray-600">+1 (555) 123-4567</p>
+                  <p className="text-gray-600">{contactPhone}</p>
                 </div>
               </div>
               
@@ -112,7 +116,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Location</h3>
-                  <p className="text-gray-600">Available Worldwide</p>
+                  <p className="text-gray-600">{contactLocation}</p>
                 </div>
               </div>
             </div>

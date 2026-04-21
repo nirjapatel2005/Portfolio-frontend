@@ -56,8 +56,11 @@ const RouteScrollNavigator = () => {
       const edgeOffset = 90;
       const nearTop = scrollY <= edgeOffset;
       const nearBottom = scrollY + viewportHeight >= documentHeight - edgeOffset;
+      const footerElement = document.querySelector('footer');
+      const footerRect = footerElement?.getBoundingClientRect();
+      const isFooterVisible = footerRect ? footerRect.top < viewportHeight : false;
 
-      if (event.deltaY > 0 && !nearBottom) {
+      if (event.deltaY > 0 && (!nearBottom || !isFooterVisible)) {
         wheelAccumulator.current = 0;
         return;
       }
